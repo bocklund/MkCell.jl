@@ -12,6 +12,28 @@ using LinearAlgebra
 
 # [ ia ja jk, ib jb kb, ic jc kc]; # [a, b, c]
 
+# angle between two vectors (in radians)
+ang(x,y) = acos(dot(x,y)/(norm(x)*norm(y)))
+
+function angles_abc(a, b, c)
+    return [ang(a, b) ang(a, c) ang(b, c)]
+end # function
+
+# score distortion of cell angles from 90 degrees as a sum of squares
+# higher scores means larger deviations from 90 degrees
+# angles is an array of angles
+score_angles_cell(cell) = sum((angles_abc(cell[1,:], cell[2,:], cell[3,:]).-π/2).^2)
+
+# score the lengths of the cell as sum of square differences
+function score_lengths_abc(a, b, c)
+    ab = norm(a) - norm(b)
+    ac = norm(a) - norm(c)
+    bc = norm(b) - norm(c)
+    return sum([ab ac bc].^2)
+end # function
+
+score_lengths_cell(cell) = score_lengths_abc(cell[1,:], cell[2,:], cell[3,:])
+
 # Score based on the radius of a sphere needed to contain the whole cell
 # the lowest score gives the most compact cell. The radius of the sphere
 # needed is given by the maximum distance of any cell corner to the center
@@ -94,8 +116,8 @@ end # function
 # in the future, scoring should be as lazy as possible
 # and only progress through the criteria as necessary.
 # modifies the optimal cell and score with the optimal values
+# TODO: this code could be refactored to use a function that takes a generic scoring function and the cells to do the comparison/updating
 function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
-
     # score based on minimum sphere radius
     opt1 = optscore[1] # must be a number
     cand1 = score_sphere(candidate_cell)
@@ -108,15 +130,15 @@ function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
             # candidate cell is better
             optcell[:,:] = candidate_cell
             best_matrix[:,:] = cur_matrix
-            optscore[:] = [Inf -Inf Inf] # reset the scores
+            optscore[:] = [Inf -Inf Inf Inf] # reset the scores
             optscore[1] = cand1 # set the first score
             return
         end # if
     end #if
+
     # since the sphere scores are tied, we must score based on minimum image distance
     opt2 = isnan(optscore[2]) ? score_image_distance(optcell) : optscore[2]
     cand2 = score_image_distance(candidate_cell)
-    println([opt2 cand2], "  2")
     if opt2 != cand2
         # we can choose the cell with the minimum sphere size
         if argmax([opt2, cand2]) == 1
@@ -127,18 +149,57 @@ function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
             # candidate cell is better
             optcell[:,:] = candidate_cell
             best_matrix[:,:] = cur_matrix
-            optscore[:] = [Inf -Inf Inf] # reset the scores
+            optscore[:] = [Inf -Inf Inf Inf] # reset the scores
             optscore[1] = cand1 # set the first score
             optscore[2] = cand2 # set the second score
             return
         end # if
-    else
-        # we don't handle this case yet!
-        # for now, just count it as a tie
-        println("Tie")
-        return
-        throw(DomainError("Choosing", "Both radius and image distance are equal!"))
+    end # if
+
+    # compare cell angle deviations from 90 degrees
+    opt3 = isnan(optscore[3]) ? score_angles_cell(optcell) : optscore[3]
+    cand3 = score_angles_cell(candidate_cell)
+    if opt3 != cand3
+        if argmin([opt3, cand3]) == 1
+            # optimum cell stays the same
+            optscore[3] = opt3
+            return
+        else
+            # candidate cell is better
+            optcell[:,:] = candidate_cell
+            best_matrix[:,:] = cur_matrix
+            optscore[:] = [Inf -Inf Inf Inf] # reset the scores
+            optscore[1] = cand1 # set the first score
+            optscore[2] = cand2 # set the second score
+            optscore[3] = cand3 # set the third score
+            return
+        end # if
     end #if
+
+    # compare cell length deviations from each other
+    opt4 = isnan(optscore[4]) ? score_lengths_cell(optcell) : optscore[4]
+    cand4 = score_lengths_cell(candidate_cell)
+    if opt4 != cand4
+        if argmin([opt4, cand4]) == 1
+            # optimum cell stays the same
+            optscore[4] = opt4
+            return
+        else
+            # candidate cell is better
+            optcell[:,:] = candidate_cell
+            best_matrix[:,:] = cur_matrix
+            optscore[:] = [Inf -Inf Inf Inf] # reset the scores
+            optscore[1] = cand1 # set the first score
+            optscore[2] = cand2 # set the second score
+            optscore[3] = cand3 # set the third score
+            optscore[4] = cand4 # set the fourth score
+            return
+        end # if
+    end #if
+
+    # these cells are equivalent, just return (keeping the original best cell)
+    # println("Tie, current matrix ", cur_matrix)
+    return
 
 end # function
 
@@ -146,7 +207,7 @@ function cellopt(a, b, c, m, n)
     Vsuper = det([a; b; c])*m  # target supercell volume
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)  # current best cell
-    best_cell_score = [Inf -Inf Inf] # score of the current best cell
+    best_cell_score = [Inf -Inf Inf Inf] # score of the current best cell
     cur_cell = Array{Float64}(undef, 3, 3)
     best_matrix = Array{Float64}(undef, 3, 3)
     cur_matrix = Array{Float64}(undef, 3, 3)
@@ -181,11 +242,11 @@ function cellopt(a, b, c, m, n)
             end # for
         end # for
     end # for
-    println(count, " cells considered")
-    println("Rmax ", best_cell_score[1], "  dmin ", best_cell_score[2])
-    println(best_matrix)
-    println(best_cell)
-    return
+    # println(count, " cells considered")
+    # println("Rmax ", best_cell_score[1], "  dmin ", best_cell_score[2])
+    # println("Best matrix ", best_matrix)
+    # println("Best cell", best_cell)
+    return best_cell, best_matrix, best_cell_score, count
 end # function
 
 end # module
