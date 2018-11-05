@@ -203,7 +203,7 @@ function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
 
 end # function
 
-function cellopt(a, b, c, m, n)
+function cellopt(a, b, c, m, n; verbose=false)
     Vsuper = det([a; b; c])*m  # target supercell volume
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)  # current best cell
@@ -237,15 +237,25 @@ function cellopt(a, b, c, m, n)
                 end # if
                 # This is a valid supercell, now try to determine if it's the optimal cell so far
                 cellchoose!(best_cell, best_cell_score, cur_cell, best_matrix, cur_matrix)
-
                 count = count + 1;
             end # for
         end # for
     end # for
-    # println(count, " cells considered")
-    # println("Rmax ", best_cell_score[1], "  dmin ", best_cell_score[2])
-    # println("Best matrix ", best_matrix)
-    # println("Best cell", best_cell)
+    if verbose
+        as = best_cell[1,:]
+        bs = best_cell[2,:]
+        cs = best_cell[3,:]
+        println("Best cell", best_cell)
+        println("a b c ", norm(as), " ", norm(bs), " ", norm(cs))
+        println("α β γ (°) ", ang(as, bs)*180/π, " ", ang(as, cs)*180/π, " ", ang(bs, cs)*180/π)
+        println("Matrix ", best_matrix)
+        println("Rmax ", best_cell_score[1])
+        println("dmin ", best_cell_score[2])
+        println("Angle deviation ", best_cell_score[3])
+        println("Length deviation ", best_cell_score[4])
+        println("Cells considered ", count)
+
+    end
     return best_cell, best_matrix, best_cell_score, count
 end # function
 
