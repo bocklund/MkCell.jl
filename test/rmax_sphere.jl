@@ -1,6 +1,6 @@
 # Test that the maximum sphere radius is correctly calculated
 
-@testset "Rmax sphere" begin
+@testset "Maximum sphere radius" begin
     @test MkCell.score_sphere(fcc1*cellfcc) ≈ 0.7905694150420949
     @test MkCell.score_sphere(fcc4*cellfcc) ≈ 0.8660254037844386
     @test MkCell.score_sphere(fcc7*cellfcc) ≈ 1.118033988749895

@@ -77,7 +77,7 @@ function score_image_distance(cell)
     score = Inf
     for i=-1:1, j=-1:1, k=-1:1
         if (i^2 + j^2 + k^2) > 0
-            candidate = norm([i j k]*[a b c ])
+            candidate = norm(i*a + j*b + k*c)
             score = min(score, candidate)
         end # if
     end # for
