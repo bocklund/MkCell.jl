@@ -53,7 +53,7 @@ function cellopt(cell, m, n; verbose=false)
 
             aib = abs(ib)
             ajb = abs(jb)
-            for ic=-aib:aib, jc=-ajb:ajb, kc=1:n
+            for ic=-aib:aib, jc=-ajb:ajb, kc=-n:n
                 csuper[:] = ic*a + jc*b + kc*c;
                 if norm(csuper) <= 0
                     continue
