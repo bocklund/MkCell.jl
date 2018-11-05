@@ -1,30 +1,33 @@
-module MkCell
+"""
+MkCell provides functions for calculating optimal supercells.
 
-# Based on the paper:
-# [1] B. Militzer, High Energy Density Phys. 21 (2016) 8–15. doi:10.1016/j.hedp.2016.09.003.
+Based on the description of the approach given by
+    > B. Militzer, High Energy Density Phys. 21 (2016) 8–15. doi:10.1016/j.hedp.2016.09.003
+"""
+module MkCell
 
 export cellopt
 
 using LinearAlgebra
-# a = [ai aj ak]
-# b = [bi bj bk]
-# c = [ci cj ck]
 
-# [ ia ja jk, ib jb kb, ic jc kc]; # [a, b, c]
-
-# angle between two vectors (in radians)
+"Calculate angle between two vectors (in radians)"
 ang(x,y) = acos(dot(x,y)/(norm(x)*norm(y)))
 
+"Return an array of the unique angles for three vectors `a`, `b`, and `c`."
 function angles_abc(a, b, c)
     return [ang(a, b) ang(a, c) ang(b, c)]
 end # function
 
-# score distortion of cell angles from 90 degrees as a sum of squares
-# higher scores means larger deviations from 90 degrees
-# angles is an array of angles
+"""
+Score distortion of cell angles from 90 degrees as a sum of squares.
+
+Higher scores indicate larger deviations from 90 degrees.
+"""
 score_angles_cell(cell) = sum((angles_abc(cell[1,:], cell[2,:], cell[3,:]).-π/2).^2)
 
-# score the lengths of the cell as sum of square differences
+"""
+Score the lengths of the unique vectors `a`, `b`, and `c` pairwise as sum of square differences.
+"""
 function score_lengths_abc(a, b, c)
     ab = norm(a) - norm(b)
     ac = norm(a) - norm(c)
@@ -32,12 +35,20 @@ function score_lengths_abc(a, b, c)
     return sum([ab ac bc].^2)
 end # function
 
+"""
+Score the lengths of a cell's vectors pairwise as sum of square differences.
+"""
 score_lengths_cell(cell) = score_lengths_abc(cell[1,:], cell[2,:], cell[3,:])
 
-# Score based on the radius of a sphere needed to contain the whole cell
-# the lowest score gives the most compact cell. The radius of the sphere
-# needed is given by the maximum distance of any cell corner to the center
-# of the cell. As given by equation (3) in [1].
+"""
+Score based on the maximum radius of a sphere needed to contain the whole cell.
+
+The smallest sphere (lowest score) gives the most compact cell. The radius of
+the sphere needed is given by the maximum distance of any cell corner to the
+center of the cell.
+
+As given by equation (3) by Militzer.
+"""
 function score_sphere(cell)
     score = -Inf
     for i=-1:1, j=-1:1, k=-1:1
@@ -48,7 +59,9 @@ function score_sphere(cell)
 end #function
 
 
-# order a, b, c such that a <= b <= c
+"""
+Order three vectors `a`, `b`, `c` such that `a <= b <= c`.
+"""
 function ordervectors(a, b, c)
     l1 = a
     l2 = b
@@ -78,8 +91,10 @@ function ordervectors(a, b, c)
     return a, b, c
 end # function
 
-# Redefine the lattice vectors to point to the next nearest image
-# See equations (5)-(7) in [1].
+"""
+Redefine the lattice vectors of a cell to point to the next nearest image
+See equations (5)-(7) by Militzer.
+"""
 function closestimagevectors(cell)
     a, b, c = ordervectors(cell[1,:], cell[2,:], cell[3,:])
 
@@ -97,9 +112,12 @@ function closestimagevectors(cell)
     return a, b, c
 end # function
 
-# Score based on the minimum distance to the next image. The cell with the
-# largest minimum image distance is optimal. Solves equation (4) in [1]
-# using the solution from equations (5)-(7).
+"""
+Score based on the minimum distance to the next image.
+
+The cell with the largest minimum image distance (maximizing peroidic distances)
+is optimal. Solves equation (4) given by Militzer.
+"""
 function score_image_distance(cell)
     a, b, c = closestimagevectors(cell)
     score = Inf
@@ -112,12 +130,18 @@ function score_image_distance(cell)
     return score
 end # function
 
-# score the supercell and compare it to the optimal supercell.
-# in the future, scoring should be as lazy as possible
-# and only progress through the criteria as necessary.
-# modifies the optimal cell and score with the optimal values
-# TODO: this code could be refactored to use a function that takes a generic scoring function and the cells to do the comparison/updating
+"""
+Succesively score a candidate supercell and compare it to the current optimal supercell.
+
+Generally speaking, scoring should be as lazy as possible and only progress
+through the scoring criteria as necessary.
+
+This method modifies the optimal cell and score with the optimal values found.
+
+"""
 function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
+    # TODO: this code could be refactored to use a function that takes a generic scoring function and the cells to do the comparison/updating
+
     # score based on minimum sphere radius
     opt1 = optscore[1] # must be a number
     cand1 = score_sphere(candidate_cell)
@@ -200,10 +224,22 @@ function cellchoose!(optcell, optscore, candidate_cell, best_matrix, cur_matrix)
     # these cells are equivalent, just return (keeping the original best cell)
     # println("Tie, current matrix ", cur_matrix)
     return
-
 end # function
 
-function cellopt(a, b, c, m, n; verbose=false)
+"""
+Find an optimal supercell by scaling `cell` by `m` unit cells, searching over
+a 3x3 supercell matrix where each element ranges from `-n` to `+n`.
+
+This function follows the approach described by
+    > B. Militzer, High Energy Density Phys. 21 (2016) 8–15. doi:10.1016/j.hedp.2016.09.003
+
+An optimal cell is chosen according to the following four criteria:
+1. Minimizing the sphere radius required to contain the supercell
+2. Maximizing the periodic distance between images
+3. Minimizing the distortion of the supercell angles from 90 degrees
+4. Minimizing the difference in lattice vector length
+"""
+function cellopt(cell, m, n; verbose=false)
     Vsuper = det([a; b; c])*m  # target supercell volume
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)  # current best cell
@@ -213,12 +249,12 @@ function cellopt(a, b, c, m, n; verbose=false)
     cur_matrix = Array{Float64}(undef, 3, 3)
     for ia=1:n, ja=-n:n, ka=-n:n
         asuper = ia*a + ja*b + ka*c;
-        if LinearAlgebra.norm(asuper) <= 0
+        if norm(asuper) <= 0
             continue
         end # if
         for ib=-ia:ia, jb=-n:n, kb=-n:n
             bsuper = ib*a + jb*b + kb*c;
-            if LinearAlgebra.norm(bsuper) <= 0
+            if norm(bsuper) <= 0
                 continue
             end # if
 
@@ -226,7 +262,7 @@ function cellopt(a, b, c, m, n; verbose=false)
             ajb = abs(jb)
             for ic=-aib:aib, jc=-ajb:ajb, kc=1:n
                 csuper = ic*a + jc*b + kc*c;
-                if LinearAlgebra.norm(csuper) <= 0
+                if norm(csuper) <= 0
                     continue
                 end # if
                 cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
@@ -259,4 +295,6 @@ function cellopt(a, b, c, m, n; verbose=false)
     return best_cell, best_matrix, best_cell_score, count
 end # function
 
+# TODO: add a function that can calculate optimal cells over a range of unit cells
+# multiples to determine which multiples have dmin larger than all smaller cells
 end # module
