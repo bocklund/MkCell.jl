@@ -2,5 +2,7 @@ authors = ["bocklund <brandonbocklund@gmail.com>"]
 name = "MkCell"
 uuid = "107cabd0-c9cf-11e8-277a-333e985a44ea"
 version = "0.1.0"
+license = "MIT"
 
 [deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
