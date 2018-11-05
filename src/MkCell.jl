@@ -29,8 +29,10 @@ An optimal cell is chosen according to the following four criteria:
 function cellopt(cell, m, n; verbose=false)
     Vsuper = det(cell)*m  # target supercell volume
     count = 0;
-    best_cell = Array{Float64}(undef, 3, 3)  # current best cell
-    best_cell_score = [Inf -Inf Inf Inf] # score of the current best cell
+    best_cell = Array{Float64}(undef, 3, 3)
+    # The first value should be set to infinity so that it will always be
+    # higher than the current cell for the first iteration.
+    best_cell_score = [Inf NaN NaN NaN]
     cur_cell = Array{Float64}(undef, 3, 3)
     best_matrix = Array{Float64}(undef, 3, 3)
     cur_matrix = Array{Float64}(undef, 3, 3)
@@ -67,6 +69,8 @@ function cellopt(cell, m, n; verbose=false)
             end # for
         end # for
     end # for
+    # reverse the sign of dmin so that it's positive, consistent with reality
+    best_cell_score[2] = -best_cell_score[2]
     if verbose
         as = best_cell[1,:]
         bs = best_cell[2,:]
