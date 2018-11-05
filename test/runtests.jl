@@ -1,9 +1,10 @@
-using Test, MkCell
+using Test, LinearAlgebra, MkCell
 
 # testing data
 include("primtive_cells.jl")
-include("lattice_data.jl")
+include("paper/lattice_data.jl")
 
 # tests
-include("dmin.jl")
-include("rmax_sphere.jl")
+include("paper/volume.jl")
+include("paper/dmin.jl")
+include("paper/rmax_sphere.jl")
