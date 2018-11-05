@@ -35,3 +35,6 @@ function ordervectors(a, b, c)
     end # if
     return a, b, c
 end # function
+
+"""Get lattice a, b, c from cell"""
+cell_abc(cell) = norm(cell[1,:]), norm(cell[2,:]), norm(cell[3,:])
