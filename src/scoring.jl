@@ -37,7 +37,7 @@ As given by equation (3) by Militzer.
 function score_sphere(cell)
     score = -Inf
     for i=[-1, 1], j=[-1, 1], k=[-1, 1]
-        candidate = 0.5*norm([i j k]*cell')
+        candidate = 0.5*norm(i*cell[1,:]+j*cell[2,:]+k*cell[3,:])
         score = max(score, candidate)
     end # for
     return score
