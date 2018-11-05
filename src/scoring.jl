@@ -55,6 +55,7 @@ function closestimagevectors(cell)
     prev_b = [NaN NaN NaN]
     prev_c = [NaN NaN NaN]
     while b != prev_b && c != prev_c
+        a, b, c = ordervectors(a, b, c)
         prev_b = b
         prev_c = c
 
