@@ -28,6 +28,7 @@ An optimal cell is chosen according to the following four criteria:
 """
 function cellopt(cell, m, n; verbose=false)
     Vsuper = abs(det(cell)*m)  # target supercell volume
+    a, b, c = cell_abc(cell)
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)
     # The first value should be set to infinity so that it will always be
@@ -40,12 +41,12 @@ function cellopt(cell, m, n; verbose=false)
     bsuper = Array{Float64}(undef, 3);
     csuper = Array{Float64}(undef, 3);
     for ia=1:n, ja=-n:n, ka=-n:n
-        asuper[:] = [ia ja ka]*cell;
+        asuper[:] = ia*a + ja*b + ka*c;
         if norm(asuper) <= 0
             continue
         end # if
         for ib=-ia:ia, jb=-n:n, kb=-n:n
-            bsuper[:] = [ib jb kb]*cell;
+            bsuper[:] = ib*a + jb*b + kb*c;
             if norm(bsuper) <= 0
                 continue
             end # if
@@ -53,7 +54,7 @@ function cellopt(cell, m, n; verbose=false)
             aib = abs(ib)
             ajb = abs(jb)
             for ic=-aib:aib, jc=-ajb:ajb, kc=1:n
-                csuper[:] = [ic jc kc]*cell;
+                csuper[:] = ic*a + jc*b + kc*c;
                 if norm(csuper) <= 0
                     continue
                 end # if
