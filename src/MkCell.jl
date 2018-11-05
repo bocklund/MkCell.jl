@@ -27,7 +27,7 @@ An optimal cell is chosen according to the following four criteria:
 4. Minimizing the difference in lattice vector length
 """
 function cellopt(cell, m, n; verbose=false)
-    Vsuper = det(cell)*m  # target supercell volume
+    Vsuper = abs(det(cell)*m)  # target supercell volume
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)
     # The first value should be set to infinity so that it will always be
@@ -60,7 +60,7 @@ function cellopt(cell, m, n; verbose=false)
                 cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
                 cur_cell[:,:] = [asuper; bsuper; csuper]
                 Vsuper_calc = det(cur_cell);
-                if Vsuper_calc != Vsuper
+                if abs(Vsuper_calc) != Vsuper
                     continue
                 end # if
                 # This is a valid supercell, now try to determine if it's the optimal cell so far
