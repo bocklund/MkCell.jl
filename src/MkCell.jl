@@ -6,7 +6,7 @@ Based on the description of the approach given by
 """
 module MkCell
 
-export cellopt
+export cellopt, cell_abc, cell_angles
 
 using LinearAlgebra
 
@@ -28,7 +28,7 @@ An optimal cell is chosen according to the following four criteria:
 """
 function cellopt(cell, m, n; verbose=false)
     Vsuper = abs(det(cell)*m)  # target supercell volume
-    a, b, c = cell_abc(cell)
+    a, b, c = cell[1,:], cell[2,:], cell[3,:]
     count = 0;
     best_cell = Array{Float64}(undef, 3, 3)
     # The first value should be set to infinity so that it will always be
