@@ -16,10 +16,10 @@
     @test MkCell.score_image_distance(cubic27*cellcubic) ≈ 3.0
 
     # No idea what's going on with these cells.
-    # @test MkCell.score_image_distance(bcc1*cellbcc) ≈ 0.8660254037844386
-    # @test MkCell.score_image_distance(bcc2*cellbcc) ≈ 1.0
+    @test MkCell.score_image_distance(bcc1*cellbcc) ≈ 0.8660254037844386
+    @test MkCell.score_image_distance(bcc2*cellbcc) ≈ 1.0
     # @test MkCell.score_image_distance(bcc6*cellbcc) ≈ 1.414
-    # @test MkCell.score_image_distance(bcc16*cellbcc) ≈ 2.0
+    @test MkCell.score_image_distance(bcc16*cellbcc) ≈ 2.0
     # @test MkCell.score_image_distance(bcc25*cellbcc) ≈ 2.236
     # @test MkCell.score_image_distance(bcc48*cellbcc) ≈ 2.828
     #
