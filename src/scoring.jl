@@ -50,12 +50,12 @@ Redefine the lattice vectors of a cell to point to the next nearest image
 See equations (5)-(7) by Militzer.
 """
 function closestimagevectors(cell)
-    a, b, c = ordervectors(cell[1,:], cell[2,:], cell[3,:])
+    a, b, c = cell[1,:], cell[2,:], cell[3,:]
 
     prev_b = [NaN NaN NaN]
     prev_c = [NaN NaN NaN]
     while b != prev_b && c != prev_c
-        a, b, c = ordervectors(a, b, c)
+        a, b, c = sort([a, b, c], by=norm)
         prev_b = b
         prev_c = c
 
