@@ -14,6 +14,7 @@ fcc92 = [4 1 -2; -3 4 2; -1 3 -4];
 fcc96 = [4 -4 0; -3 -3 3; 0 0 -4];
 fcc100 = [4 1 -1; -2 5 -1; -1 -1 5];
 fcc108 = [3 3 -3; 3 -3 3; 3 -3 -3];
+fcc_cells = [fcc1, fcc4, fcc7, fcc13, fcc23, fcc26, fcc32, fcc38, fcc50, fcc70, fcc92, fcc96, fcc100, fcc108];
 
 
 cubic1 = [1 0 0; 0 1 0; 0 0 -1];
@@ -33,6 +34,8 @@ cubic73 = [4 1 1; 1 -4 -1; 0 -1 4];
 cubic76 = [4 1 1; 1 -4 -1; -1 -1 4];
 cubic93 = [3 3 1; 3 -3 -2; -1 2 -4];
 cubic100 = [5 0 0; 0 4 2; 0 2 -4];
+cubic_cells = [cubic1, cubic3, cubic7, cubic8, cubic13, cubic14, cubic24, cubic27, cubic33, cubic38, cubic52, cubic56, cubic64, cubic73, cubic76, cubic93, cubic100];
+
 
 bcc1 = [1 0 0; 1 -1 -1; 0 -1 0];
 bcc2 = [1 0 -1; 1 -1 0; 0 -1 -1];
@@ -53,13 +56,8 @@ bcc103 = [5 -1 -2; -2 5 3; 0 -1 4];
 bcc107 = [5 -1 -2; 2 -5 -4; -1 2 -3];
 bcc112 = [5 -1 -1; -1 5 1; -1 1 5];
 bcc128 = [4 0 -4; 4 -4 0; 0 -4 -4];
+bcc_cells = [bcc1, bcc2, bcc6, bcc9, bcc16, bcc21, bcc25, bcc28, bcc35, bcc48, bcc53, bcc54, bcc65, bcc84, bcc91, bcc103, bcc107, bcc112, bcc128];
 
-#bcc1 = [1 0 0; -1 -1 -1; 0 -1 0]; # paper seems to have a typo, was [1 0 0; 1 -1 -1; 0 -1 0]
-#bcc2 = [1 0 -1; 1 -1 0; 0 -1 -1];
-#bcc6 = [2 -1 -2; -1 2 1; -1 0 -1];
-#bcc16 = [2 0 2; 2 2 0; 0 2 2];  # another typo: [2 0 -2; 2 -2 0; 0 -2 -2]
-#bcc25 = [3 -1 -3; -2 3 1; -1 -1 -2];
-#bcc48 = [3 0 -3; 2 -4 -2; -2 0 -2];
 
 hcp1 = [1 0 0; 1 1 0; 0 0 1];
 hcp3 = [2 1 0; 1 -1 0; 0 0 -1];
@@ -82,6 +80,4 @@ hcp80 = [5 0 0; 2 4 2; 2 4 -2];
 hcp88 = [5 0 1; 3 4 -2; -1 -4 -2];
 hcp90 = [6 3 0; 0 -5 0; 0 0 -3];
 hcp100 = [5 0 0; 3 6 1; 1 2 -3];
-
-
-
+hcp_cells = [hcp1, hcp3, hcp6, hcp8, hcp11, hcp14, hcp16, hcp21, hcp27, hcp37, hcp39, hcp42, hcp53, hcp62, hcp65, hcp69, hcp76, hcp80, hcp88, hcp90];
