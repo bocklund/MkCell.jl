@@ -55,9 +55,6 @@ function cellopt(cell, m, n; verbose=false)
             ajb = abs(jb)
             for ic=-aib:aib, jc=-ajb:ajb, kc=-n:n
                 csuper[:] = ic*a + jc*b + kc*c;
-                if norm(csuper) <= 0
-                    continue
-                end # if
                 cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
                 cur_cell[:,:] = [asuper; bsuper; csuper]
                 Vsuper_calc = det(cur_cell);
