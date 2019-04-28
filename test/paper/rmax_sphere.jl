@@ -37,7 +37,6 @@ end;
     @test MkCell.score_sphere(cubic100*cellcubic) ≈ 4.031128874149275
 end;
 @testset "bcc" begin
-    # No idea what's going on with these cells.
     @test MkCell.score_sphere(bcc1*cellbcc)   ≈ 0.82915619758885
     @test MkCell.score_sphere(bcc2*cellbcc)   ≈ 0.8660254037844386
     @test MkCell.score_sphere(bcc6*cellbcc)   ≈ 1.479019945774904
