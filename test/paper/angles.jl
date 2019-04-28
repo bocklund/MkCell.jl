@@ -1,4 +1,4 @@
-@testset "Angles" begin
+@testset "Supercell angles" begin
 @testset "fcc" begin
     @test all(MkCell.cell_angles(fcc1*cellfcc)   .≈ (90.0, 120.0, 60.0))
     @test all(MkCell.cell_angles(fcc4*cellfcc)   .≈ (90.0, 90.0, 90.0))
@@ -56,12 +56,27 @@ end;
     @test all(MkCell.cell_angles(bcc128*cellbcc) .≈ (90.0, 90.0, 90.0))
 end;
 @testset "hcp" begin
-    @test all(MkCell.cell_angles(hcp1*cellhcp) .≈ (90, 90, 60))
-    @test all(MkCell.cell_angles(hcp3*cellhcp) .≈ (90, 90, 60))
-    @test all(MkCell.cell_angles(hcp6*cellhcp) .≈(90, 90, 97.7493663782984))
-    # @test all(MkCell.cell_angles(hcp11*cellhcp) .≈
-    # @test all(MkCell.cell_angles(hcp14*cellhcp) .≈
-    # @test all(MkCell.cell_angles(hcp80*cellhcp) .≈
+    @test all(MkCell.cell_angles(hcp1*cellhcp)   .≈ (90.0, 90.0, 60.0))
+    @test all(MkCell.cell_angles(hcp3*cellhcp)   .≈ (90.0, 90.0, 60.0))
+    @test all(MkCell.cell_angles(hcp6*cellhcp)   .≈ (90.0, 90.0, 97.7493663782984))
+    @test all(MkCell.cell_angles(hcp8*cellhcp)   .≈ (86.62771331656612, 90.0, 90.0))
+    @test all(MkCell.cell_angles(hcp11*cellhcp)  .≈ (93.10882512596606, 81.58250966338895, 76.22172246000032))
+    @test all(MkCell.cell_angles(hcp14*cellhcp)  .≈ (95.7391704772668, 80.43938360731833, 78.01745450750637))
+    @test all(MkCell.cell_angles(hcp16*cellhcp)  .≈ (90.0, 90.0, 98.21321070173819))
+    @test all(MkCell.cell_angles(hcp21*cellhcp)  .≈ (85.05457028211667, 94.94542971788334, 85.05457028211667))
+    @test all(MkCell.cell_angles(hcp27*cellhcp)  .≈ (99.04109614857515, 80.95890385142484, 80.95890385142484))
+    @test all(MkCell.cell_angles(hcp37*cellhcp)  .≈ (87.38866773903177, 96.46147790595835, 87.99219492277635))
+    @test all(MkCell.cell_angles(hcp39*cellhcp)  .≈ (93.26480184633287, 80.51388629606356, 88.73996568504259))
+    @test all(MkCell.cell_angles(hcp42*cellhcp)  .≈ (91.26003431495744, 91.26003431495741, 82.05063659026476))
+    @test all(MkCell.cell_angles(hcp53*cellhcp)  .≈ (97.09038962820946, 88.0060223885153, 85.52821741779152))
+    @test all(MkCell.cell_angles(hcp62*cellhcp)  .≈ (93.27084136698927, 97.84269934104985, 95.41194366545838))
+    @test all(MkCell.cell_angles(hcp65*cellhcp)  .≈ (81.55960115382774, 88.0060223885153, 93.63706568080396))
+    @test all(MkCell.cell_angles(hcp69*cellhcp)  .≈ (90.0, 90.0, 94.30661909550145))
+    @test all(MkCell.cell_angles(hcp76*cellhcp)  .≈ (89.57829310179544, 91.72387995423274, 94.12652542280888))
+    @test all(MkCell.cell_angles(hcp80*cellhcp)  .≈ (86.62771331656612, 90.0, 90.0))
+    @test all(MkCell.cell_angles(hcp88*cellhcp)  .≈ (90.80700949307113, 90.74639151793876, 90.74639151793875))
+    @test all(MkCell.cell_angles(hcp90*cellhcp)  .≈ (90.0, 90.0, 90.0))
+    @test all(MkCell.cell_angles(hcp100*cellhcp) .≈ (87.97513170272266, 90.0, 90.0))
 end;
 
 end;

@@ -59,11 +59,26 @@ end;
     @test MkCell.score_sphere(bcc128*cellbcc) ≈ 3.4641016151377544
 end;
 @testset "hcp" begin
-    # @test MkCell.score_sphere(hcp1*cellhcp) ≈ 0.668
-    # @test MkCell.score_sphere(hcp3*cellhcp) ≈ 0.958
-    # @test MkCell.score_sphere(hcp6*cellhcp) ≈ 1.075
-    # @test MkCell.score_sphere(hcp11*cellhcp) ≈ 1.365
-    # @test MkCell.score_sphere(hcp14*cellhcp) ≈ 1.476
-    # @test MkCell.score_sphere(hcp80*cellhcp) ≈ 2.398
+    @test MkCell.score_sphere(hcp1*cellhcp)   ≈ 0.6679616056830413
+    @test MkCell.score_sphere(hcp3*cellhcp)   ≈ 0.9584314616427545
+    @test MkCell.score_sphere(hcp6*cellhcp)   ≈ 1.074616185745714
+    @test MkCell.score_sphere(hcp8*cellhcp)   ≈ 1.1224
+    @test MkCell.score_sphere(hcp11*cellhcp)  ≈ 1.3650740590409982
+    @test MkCell.score_sphere(hcp14*cellhcp)  ≈ 1.4759311049864985
+    @test MkCell.score_sphere(hcp16*cellhcp)  ≈ 1.4490121692610682
+    @test MkCell.score_sphere(hcp21*cellhcp)  ≈ 1.5538924372898746
+    @test MkCell.score_sphere(hcp27*cellhcp)  ≈ 1.7448417081978145
+    @test MkCell.score_sphere(hcp37*cellhcp)  ≈ 1.8962138873731165
+    @test MkCell.score_sphere(hcp39*cellhcp)  ≈ 1.9775167626765309
+    @test MkCell.score_sphere(hcp42*cellhcp)  ≈ 2.0169395793297
+    @test MkCell.score_sphere(hcp53*cellhcp)  ≈ 2.167472294325043
+    @test MkCell.score_sphere(hcp62*cellhcp)  ≈ 2.2968099877874093
+    @test MkCell.score_sphere(hcp65*cellhcp)  ≈ 2.3420716783793503
+    @test MkCell.score_sphere(hcp69*cellhcp)  ≈ 2.2968099877874093
+    @test MkCell.score_sphere(hcp76*cellhcp)  ≈ 2.3974474509360992
+    @test MkCell.score_sphere(hcp80*cellhcp)  ≈ 2.3974474509360992
+    @test MkCell.score_sphere(hcp88*cellhcp)  ≈ 2.440843687470926
+    @test MkCell.score_sphere(hcp90*cellhcp)  ≈ 2.446214087115026
+    @test MkCell.score_sphere(hcp100*cellhcp) ≈ 2.5666337461092237
 end;
 end;

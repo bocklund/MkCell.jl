@@ -58,11 +58,26 @@ end;
     @test MkCell.score_image_distance(bcc128*cellbcc) ≈ 4.000
 end;
 @testset "hcp" begin
-    # @test MkCell.score_image_distance(hcp1*cellhcp) ≈ 0.561
-    # @test MkCell.score_image_distance(hcp3*cellhcp) ≈ 0.916
-    # @test MkCell.score_image_distance(hcp6*cellhcp) ≈ 0.972
-    # @test MkCell.score_image_distance(hcp11*cellhcp) ≈ 1.336
-    # @test MkCell.score_image_distance(hcp14*cellhcp) ≈ 1.449
-    # @test MkCell.score_image_distance(hcp80*cellhcp) ≈ 2.672
+    @test MkCell.score_image_distance(hcp1*cellhcp)   ≈ 0.5612
+    @test MkCell.score_image_distance(hcp3*cellhcp)   ≈ 0.9164357624332797
+    @test MkCell.score_image_distance(hcp6*cellhcp)   ≈ 0.972026913207654
+    @test MkCell.score_image_distance(hcp8*cellhcp)   ≈ 1.1224
+    @test MkCell.score_image_distance(hcp11*cellhcp)  ≈ 1.3359232113660824
+    @test MkCell.score_image_distance(hcp14*cellhcp)  ≈ 1.4490121692610682
+    @test MkCell.score_image_distance(hcp16*cellhcp)  ≈ 1.4847956357694483
+    @test MkCell.score_image_distance(hcp21*cellhcp)  ≈ 1.7448417081978143
+    @test MkCell.score_image_distance(hcp27*cellhcp)  ≈ 1.9168629232855088
+    @test MkCell.score_image_distance(hcp37*cellhcp)  ≈ 2.023435375790391
+    @test MkCell.score_image_distance(hcp39*cellhcp)  ≈ 2.0746696957989883
+    @test MkCell.score_image_distance(hcp42*cellhcp)  ≈ 2.149232371491428
+    @test MkCell.score_image_distance(hcp53*cellhcp)  ≈ 2.221293593081893
+    @test MkCell.score_image_distance(hcp62*cellhcp)  ≈ 2.358820914496619
+    @test MkCell.score_image_distance(hcp65*cellhcp)  ≈ 2.4246611199643273
+    @test MkCell.score_image_distance(hcp69*cellhcp)  ≈ 2.4462140871150257
+    @test MkCell.score_image_distance(hcp76*cellhcp)  ≈ 2.6122438375210435
+    @test MkCell.score_image_distance(hcp80*cellhcp)  ≈ 2.6718464227321648
+    @test MkCell.score_image_distance(hcp88*cellhcp)  ≈ 2.7301481180819964
+    @test MkCell.score_image_distance(hcp90*cellhcp)  ≈ 2.749307287299839
+    @test MkCell.score_image_distance(hcp100*cellhcp) ≈ 2.806
 end;
 end;
