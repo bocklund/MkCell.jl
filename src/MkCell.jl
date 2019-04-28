@@ -56,7 +56,7 @@ function cellopt(cell, m, n; verbose=false)
             for ic=-aib:aib, jc=-ajb:ajb, kc=-n:n
                 csuper[:] = ic*a + jc*b + kc*c;
                 cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
-                cur_cell[:,:] = [asuper; bsuper; csuper]
+                cur_cell[:,:] = [asuper'; bsuper'; csuper']
                 Vsuper_calc = det(cur_cell);
                 if abs(Vsuper_calc) != Vsuper
                     continue
@@ -82,7 +82,6 @@ function cellopt(cell, m, n; verbose=false)
         println("Angle deviation ", best_cell_score[3])
         println("Length deviation ", best_cell_score[4])
         println("Cells considered ", count)
-
     end
     return best_cell, best_matrix, best_cell_score, count
 end # function
