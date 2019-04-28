@@ -1,6 +1,7 @@
 # Test that the maximum sphere radius is correctly calculated
 
-@testset "Maximum sphere radius - fcc" begin
+@testset "Maximum sphere radius" begin
+@testset "fcc" begin
     @test MkCell.score_sphere(fcc1*cellfcc)   ≈ 0.7905694150420949
     @test MkCell.score_sphere(fcc4*cellfcc)   ≈ 0.8660254037844386
     @test MkCell.score_sphere(fcc7*cellfcc)   ≈ 1.118033988749895
@@ -16,7 +17,7 @@
     @test MkCell.score_sphere(fcc100*cellfcc) ≈ 2.692582403567252
     @test MkCell.score_sphere(fcc108*cellfcc) ≈ 2.598076211353316
 end;
-@testset "Maximum sphere radius - cubic" begin
+@testset "cubic" begin
     @test MkCell.score_sphere(cubic1*cellcubic)   ≈ 0.8660254037844386
     @test MkCell.score_sphere(cubic3*cellcubic)   ≈ 1.50
     @test MkCell.score_sphere(cubic7*cellcubic)   ≈ 2.0615528128088303
@@ -35,7 +36,7 @@ end;
     @test MkCell.score_sphere(cubic93*cellcubic)  ≈ 4.06201920231798
     @test MkCell.score_sphere(cubic100*cellcubic) ≈ 4.031128874149275
 end;
-@testset "Maximum sphere radius - bcc" begin
+@testset "bcc" begin
     # No idea what's going on with these cells.
     @test MkCell.score_sphere(bcc1*cellbcc)   ≈ 0.82915619758885
     @test MkCell.score_sphere(bcc2*cellbcc)   ≈ 0.8660254037844386
@@ -57,11 +58,12 @@ end;
     @test MkCell.score_sphere(bcc112*cellbcc) ≈ 3.418698582794336
     @test MkCell.score_sphere(bcc128*cellbcc) ≈ 3.4641016151377544
 end;
-@testset "Maximum sphere radius - hcp" begin
+@testset "hcp" begin
     # @test MkCell.score_sphere(hcp1*cellhcp) ≈ 0.668
     # @test MkCell.score_sphere(hcp3*cellhcp) ≈ 0.958
     # @test MkCell.score_sphere(hcp6*cellhcp) ≈ 1.075
     # @test MkCell.score_sphere(hcp11*cellhcp) ≈ 1.365
     # @test MkCell.score_sphere(hcp14*cellhcp) ≈ 1.476
     # @test MkCell.score_sphere(hcp80*cellhcp) ≈ 2.398
+end;
 end;

@@ -1,6 +1,7 @@
 # Test that the minimum image distance is correctly calculated
 
-@testset "Minimum image distance - fcc" begin
+@testset "Minimum image distance" begin
+@testset "fcc" begin
     @test MkCell.score_image_distance(fcc1*cellfcc)   ≈ 0.7071067811865476
     @test MkCell.score_image_distance(fcc4*cellfcc)   ≈ 1.000
     @test MkCell.score_image_distance(fcc7*cellfcc)   ≈ 1.224744871391589
@@ -16,7 +17,7 @@
     @test MkCell.score_image_distance(fcc100*cellfcc) ≈ 2.9154759474226504
     @test MkCell.score_image_distance(fcc108*cellfcc) ≈ 3.000
 end;
-@testset "Minimum image distance - cubic" begin
+@testset "cubic" begin
     @test MkCell.score_image_distance(cubic1*cellcubic)   ≈ 1.000
     @test MkCell.score_image_distance(cubic3*cellcubic)   ≈ 1.4142135623730951
     @test MkCell.score_image_distance(cubic7*cellcubic)   ≈ 1.7320508075688772
@@ -35,7 +36,7 @@ end;
     @test MkCell.score_image_distance(cubic93*cellcubic)  ≈ 4.358898943540674
     @test MkCell.score_image_distance(cubic100*cellcubic) ≈ 4.47213595499958
 end;
-@testset "Minimum image distance - bcc" begin
+@testset "bcc" begin
     @test MkCell.score_image_distance(bcc1*cellbcc)   ≈ 0.8660254037844386
     @test MkCell.score_image_distance(bcc2*cellbcc)   ≈ 1.000
     @test MkCell.score_image_distance(bcc6*cellbcc)   ≈ 1.4142135623730951
@@ -55,13 +56,13 @@ end;
     @test MkCell.score_image_distance(bcc107*cellbcc) ≈ 3.7416573867739413
     @test MkCell.score_image_distance(bcc112*cellbcc) ≈ 3.840572873934304
     @test MkCell.score_image_distance(bcc128*cellbcc) ≈ 4.000
-
 end;
-@testset "Minimum image distance - hcp" begin
+@testset "hcp" begin
     # @test MkCell.score_image_distance(hcp1*cellhcp) ≈ 0.561
     # @test MkCell.score_image_distance(hcp3*cellhcp) ≈ 0.916
     # @test MkCell.score_image_distance(hcp6*cellhcp) ≈ 0.972
     # @test MkCell.score_image_distance(hcp11*cellhcp) ≈ 1.336
     # @test MkCell.score_image_distance(hcp14*cellhcp) ≈ 1.449
     # @test MkCell.score_image_distance(hcp80*cellhcp) ≈ 2.672
+end;
 end;
