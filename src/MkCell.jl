@@ -55,7 +55,9 @@ function cellopt(cell, m, n; verbose=false)
             ajb = abs(jb)
             for ic=UnitRange{Float64}(-aib,aib), jc=UnitRange{Float64}(-ajb,ajb), kc=UnitRange{Float64}(-n,n)
                 csuper[:] = ic*a + jc*b + kc*c;
-                cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
+                cur_matrix[1] = ia; cur_matrix[2] = ib; cur_matrix[3] = ic;
+                cur_matrix[4] = ja; cur_matrix[5] = jb; cur_matrix[6] = jc;
+                cur_matrix[7] = ka; cur_matrix[8] = kb; cur_matrix[9] = kc;
                 cur_cell[:,:] = [asuper'; bsuper'; csuper']
                 Vsuper_calc = det(cur_cell);
                 if abs(Vsuper_calc) != Vsuper
