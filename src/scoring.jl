@@ -17,7 +17,7 @@ function score_lengths_abc(a, b, c)
     ab = norm(a) - norm(b)
     ac = norm(a) - norm(c)
     bc = norm(b) - norm(c)
-    return sum([ab ac bc].^2)
+    return (ab^2 + ac^2 + bc^2)
 end # function
 
 """
@@ -25,6 +25,7 @@ Score the lengths of a cell's vectors pairwise as sum of square differences.
 """
 score_lengths_cell(cell) = score_lengths_abc(cell[1,:], cell[2,:], cell[3,:])
 
+const M1TO1 = [-1, 0, 1]
 """
 Score based on the maximum radius of a sphere needed to contain the whole cell.
 
@@ -36,7 +37,7 @@ As given by equation (3) by Militzer.
 """
 function score_sphere(cell)
     score = -Inf
-    for i=[-1, 1], j=[-1, 1], k=[-1, 1]
+    for i=M1TO1, j=M1TO1, k=M1TO1
         candidate = 0.5*norm(i*cell[1,:]+j*cell[2,:]+k*cell[3,:])
         score = max(score, candidate)
     end # for
@@ -44,7 +45,7 @@ function score_sphere(cell)
 end #function
 
 
-
+const PREV_NAN = MVector{3}(Array{Float64}(undef, 3))
 """
 Redefine the lattice vectors of a cell to point to the next nearest image
 See equations (5)-(7) by Militzer.
@@ -52,12 +53,12 @@ See equations (5)-(7) by Militzer.
 function closestimagevectors(cell)
     a, b, c = cell[1,:], cell[2,:], cell[3,:]
 
-    prev_b = [NaN NaN NaN]
-    prev_c = [NaN NaN NaN]
+    prev_b = PREV_NAN
+    prev_c = PREV_NAN
     while b != prev_b && c != prev_c
         a, b, c = sort([a, b, c], by=norm)
-        prev_b = b
-        prev_c = c
+        prev_b[:] = b
+        prev_c[:] = c
 
         b = b - a*round(dot(b,a)/dot(a,a), RoundNearestTiesUp)
         c = c - a*round(dot(c,a)/dot(a,a), RoundNearestTiesUp)
@@ -66,6 +67,7 @@ function closestimagevectors(cell)
 
     return a, b, c
 end # function
+
 
 """
 Score based on the minimum distance to the next image.
@@ -76,7 +78,7 @@ is optimal. Solves equation (4) given by Militzer.
 function score_image_distance(cell)
     a, b, c = closestimagevectors(cell)
     score = Inf
-    for i=-1:1, j=-1:1, k=-1:1
+    for i=M1TO1, j=M1TO1, k=M1TO1
         if (i^2 + j^2 + k^2) > 0
             candidate = norm(i*a + j*b + k*c)
             score = min(score, candidate)
@@ -104,7 +106,7 @@ function compare_cell_scores!(scorefunc, optcell, candcell, optscore, candscore,
     candscore[idx] = candsc
     if optsc != candsc
         # we can choose the cell with the minimum sphere size
-        if argmin([optsc, candsc]) == 1
+        if argmin((optsc, candsc)) == 1
             # optimum cell stays the same
             return true
         else
@@ -119,6 +121,9 @@ function compare_cell_scores!(scorefunc, optcell, candcell, optscore, candscore,
     end # if
 end # function
 
+const SCOREFUNCS = [score_sphere, score_image_distance_min, score_angles_cell, score_lengths_cell]
+const NSCOREFUNCS = length(SCOREFUNCS)
+const CANDSCORES = Array{Float64}(undef, NSCOREFUNCS)
 """
 Loop through scoring criteria functions to find the optimal cell in a pairwise comparison.
 
@@ -129,10 +134,12 @@ This method modifies the optimal cell and score with the optimal values found.
 
 """
 function cellchoose!(optcell, optscore, candcell, best_matrix, cur_matrix)
-    candscore = [NaN NaN NaN NaN]
-    scorefuncs = [score_sphere, score_image_distance_min, score_angles_cell, score_lengths_cell]
-    for i=1:length(scorefuncs)
-        optimum_found = compare_cell_scores!(scorefuncs[i], optcell, candcell, optscore, candscore, best_matrix, cur_matrix, i)
+    candscore = CANDSCORES
+    for i=1:NSCOREFUNCS
+        candscore[i] = NaN
+    end
+    for i=1:NSCOREFUNCS
+        optimum_found = compare_cell_scores!(SCOREFUNCS[i], optcell, candcell, optscore, candscore, best_matrix, cur_matrix, i)
         if optimum_found
             return
         end # if
