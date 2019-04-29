@@ -8,7 +8,7 @@ module MkCell
 
 export cellopt, cell_abc, cell_angles
 
-using LinearAlgebra
+using LinearAlgebra, StaticArrays
 
 include("vecutils.jl")
 include("scoring.jl")
@@ -28,24 +28,24 @@ An optimal cell is chosen according to the following four criteria:
 """
 function cellopt(cell, m, n; verbose=false)
     Vsuper = abs(det(cell)*m)  # target supercell volume
-    a, b, c = cell[1,:], cell[2,:], cell[3,:]
+    a, b, c = SVector{3}(cell[1,:]), SVector{3}(cell[2,:]), SVector{3}(cell[3,:])
     count = 0;
-    best_cell = Array{Float64}(undef, 3, 3)
+    best_cell = MMatrix{3,3}(Array{Float64}(undef, 3, 3))
     # The first value should be set to infinity so that it will always be
     # higher than the current cell for the first iteration.
     best_cell_score = [Inf NaN NaN NaN]
-    cur_cell = Array{Float64}(undef, 3, 3)
-    best_matrix = Array{Float64}(undef, 3, 3)
-    cur_matrix = Array{Float64}(undef, 3, 3)
-    asuper = Array{Float64}(undef, 3);
-    bsuper = Array{Float64}(undef, 3);
-    csuper = Array{Float64}(undef, 3);
-    for ia=1:n, ja=-n:n, ka=-n:n
+    cur_cell = MMatrix{3,3}(Array{Float64}(undef, 3, 3));
+    best_matrix = MMatrix{3,3}(Array{Float64}(undef, 3, 3));
+    cur_matrix = MMatrix{3,3}(Array{Float64}(undef, 3, 3));
+    asuper = MVector{3}(Array{Float64}(undef, 3));
+    bsuper = MVector{3}(Array{Float64}(undef, 3));
+    csuper = MVector{3}(Array{Float64}(undef, 3));
+    for ia=UnitRange{Float64}(1,n), ja=UnitRange{Float64}(-n,n), ka=UnitRange{Float64}(-n,n)
         asuper[:] = ia*a + ja*b + ka*c;
         if norm(asuper) <= 0
             continue
         end # if
-        for ib=-ia:ia, jb=-n:n, kb=-n:n
+        for ib=UnitRange{Float64}(-ia,ia), jb=UnitRange{Float64}(-n,n), kb=UnitRange{Float64}(-n,n)
             bsuper[:] = ib*a + jb*b + kb*c;
             if norm(bsuper) <= 0
                 continue
@@ -53,7 +53,7 @@ function cellopt(cell, m, n; verbose=false)
 
             aib = abs(ib)
             ajb = abs(jb)
-            for ic=-aib:aib, jc=-ajb:ajb, kc=-n:n
+            for ic=UnitRange{Float64}(-aib,aib), jc=UnitRange{Float64}(-ajb,ajb), kc=UnitRange{Float64}(-n,n)
                 csuper[:] = ic*a + jc*b + kc*c;
                 cur_matrix[:,:] = [ ia ja ka; ib jb kb; ic jc kc]
                 cur_cell[:,:] = [asuper'; bsuper'; csuper']
