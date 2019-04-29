@@ -1,6 +1,6 @@
 "Return an array of the unique angles for three vectors `a`, `b`, and `c`."
 function angles_abc(a, b, c)
-    return [ang(a, b) ang(a, c) ang(b, c)]
+    return ang(a, b), ang(a, c), ang(b, c)
 end # function
 
 """
@@ -8,7 +8,10 @@ Score distortion of cell angles from 90 degrees as a sum of squares.
 
 Higher scores indicate larger deviations from 90 degrees.
 """
-score_angles_cell(cell) = sum((angles_abc(cell[1,:], cell[2,:], cell[3,:]).-π/2).^2)
+function score_angles_cell(cell)
+    ab, ac, bc = angles_abc(cell[1,:], cell[2,:], cell[3,:])
+    return (ab-π/2)^2 + (ac-π/2)^2 + (bc-π/2)^2
+end
 
 """
 Score the lengths of the unique vectors `a`, `b`, and `c` pairwise as sum of square differences.
