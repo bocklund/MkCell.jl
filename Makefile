@@ -1,23 +1,17 @@
-LOCALBIN        = bin
 BUILDDIR        = _build
-PREFIX          = /usr/local
+PREFIX          = /usr/local/bin
 COMPILE_SCRIPT  = compile/compile.jl
-BUILD_ARTIFACTS = $(BUILDDIR)/supercellular $(BUILDDIR)/supercellular.dylib
+BUILD_ARTIFACTS = $(BUILDDIR)/mkcell $(BUILDDIR)/mkcell.dylib
 
 $(BUILD_ARTIFACTS):
 	julia $(COMPILE_SCRIPT)
 
 build: $(BUILD_ARTIFACTS)
-	mkdir -p $(LOCALBIN)
-	cp $(BUILDDIR)/supercellular $(BUILDDIR)/supercellular.dylib $(LOCALBIN)
+	julia $(COMPILE_SCRIPT)
 
 install: build
-	cp $(LOCALBIN)/supercellular $(LOCALBIN)/supercellular.dylib $(PREFIX)
+	cp $(BUILD_ARTIFACTS) $(PREFIX)
 
 .PHONY: clean
 clean:
-	rm -rf $(LOCALBIN)
-
-.PHONY: veryclean
-veryclean: clean
 	rm -rf $(BUILDDIR)
